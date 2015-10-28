@@ -4,4 +4,13 @@
     <string name="game_over_title">Game Over</string>
     <string name="game_over_message">You hit a mine.</string>
     <string name="game_over_button">OK</string>
+    <string name="new_game">New Game</string>
+    <string name="validate">Validate</string>
+    <string name="cheat">Cheat</string>
+    <string name="game_fail_title">Game Failed</string>
+    <string name="game_fail_message">You did not find all the mines.</string>
+    <string name="game_fail_button">ok</string>
+    <string name="game_success_title">Congratulations!</string>
+    <string name="game_success_message">You find all the Mines.</string>
+    <string name="game_success_button">OK</string>
 </resources>

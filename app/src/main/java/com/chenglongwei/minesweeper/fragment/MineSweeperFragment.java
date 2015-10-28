@@ -9,11 +9,9 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsoluteLayout;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 
 import com.chenglongwei.minesweeper.R;
 import com.chenglongwei.minesweeper.dialog.ConfirmDialog;
@@ -26,13 +24,17 @@ import java.util.Set;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MineSweeperFragment extends Fragment {
+public class MineSweeperFragment extends Fragment implements View.OnClickListener {
+    private Button bt_new;
+    private Button bt_valide;
+    private Button bt_cheat;
+    private LinearLayout ll_mine_field;
+
     private GameBoard game;
     private GameCell[][] cellButtons;
     // if the cell is 0, we should revel neighbors around it,
     // remember cell 0 positions, and do recursively revel.
     private Set<Point> reveled;
-    private LinearLayout ll_mine_field;
     private CellClickListener cellClickListener;
     private String TAG = "MineSweeper";
 
@@ -48,8 +50,19 @@ public class MineSweeperFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ll_mine_field = (LinearLayout) view.findViewById(R.id.ll_mine_field);
+        initView(view);
         initGame();
+    }
+
+    private void initView(View view) {
+        ll_mine_field = (LinearLayout) view.findViewById(R.id.ll_mine_field);
+        bt_new = (Button) view.findViewById(R.id.bt_new);
+        bt_valide = (Button) view.findViewById(R.id.bt_validate);
+        bt_cheat = (Button) view.findViewById(R.id.bt_cheat);
+
+        bt_new.setOnClickListener(this);
+        bt_valide.setOnClickListener(this);
+        bt_cheat.setOnClickListener(this);
     }
 
     private void initGame() {
@@ -57,7 +70,39 @@ public class MineSweeperFragment extends Fragment {
         cellButtons = new GameCell[GameBoard.DEFAULT_BOARD_HEIGHT][GameBoard.DEFAULT_BOARD_WIDTH];
         cellClickListener = new CellClickListener();
         reveled = new HashSet<>();
+        enableValidAndCheat(true);
         renderMineField();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_new:
+                initGame();
+                break;
+            case R.id.bt_validate:
+                if (checkGame()) {
+                    showSuccessDialog();
+                } else {
+                    showFailedDialog();
+                }
+                break;
+            case R.id.bt_cheat:
+                cheatGame();
+                break;
+        }
+    }
+
+    private void enableValidAndCheat(boolean enable) {
+        bt_valide.setEnabled(enable);
+        bt_cheat.setEnabled(enable);
+        if (enable) {
+            bt_valide.setBackgroundResource(R.drawable.button_bg);
+            bt_cheat.setBackgroundResource(R.drawable.button_bg);
+        } else {
+            bt_valide.setBackgroundResource(R.drawable.button_disable_bg);
+            bt_cheat.setBackgroundResource(R.drawable.button_disable_bg);
+        }
     }
 
     private void renderMineField() {
@@ -102,18 +147,41 @@ public class MineSweeperFragment extends Fragment {
                 reveled.add(new Point(row, column));
                 revelNeighbors(row, column);
             } else if (game.getMineNumberAt(row, column) == GameBoard.MINE) {
-                showFailedDialog();
+                showGameOverDialog();
             }
         }
     }
 
-    private void showFailedDialog() {
+    private void showGameOverDialog() {
         ConfirmDialog.show(getActivity(), R.string.game_over_title, R.string.game_over_message,
                 R.string.game_over_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        //TODO: block the validate
+                        enableValidAndCheat(false);
+                        revelGameBoard();
+                    }
+                });
+    }
+
+    private void showSuccessDialog() {
+        ConfirmDialog.show(getActivity(), R.string.game_success_title, R.string.game_success_message,
+                R.string.game_success_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        enableValidAndCheat(false);
+                    }
+                });
+    }
+
+    private void showFailedDialog() {
+        ConfirmDialog.show(getActivity(), R.string.game_fail_title, R.string.game_fail_message,
+                R.string.game_fail_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        enableValidAndCheat(false);
                         revelGameBoard();
                     }
                 });
@@ -140,5 +208,25 @@ public class MineSweeperFragment extends Fragment {
                 }
             }
         }
+    }
+
+    //to revel the mines
+    private void cheatGame() {
+        for (int i = 0; i < game.getBoardHeight(); i++) {
+            for (int j = 0; j < game.getBoardWidth(); j++) {
+                cellButtons[i][j].cheatAndRevealMine();
+            }
+        }
+    }
+
+    private boolean checkGame() {
+        for (int i = 0; i < game.getBoardHeight(); i++) {
+            for (int j = 0; j < game.getBoardWidth(); j++) {
+                if (!cellButtons[i][j].getReveled() && game.getMineNumberAt(i, j) != GameBoard.MINE) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
