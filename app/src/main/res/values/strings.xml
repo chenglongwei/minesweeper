@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MineSweeper</string>
+    <string name="action_settings">Settings</string>
+    <string name="game_over_title">Game Over</string>
+    <string name="game_over_message">You hit a mine.</string>
+    <string name="game_over_button">OK</string>
+</resources>
