@@ -1,6 +1,7 @@
 package com.chenglongwei.minesweeper.view;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.widget.Button;
 
 import com.chenglongwei.minesweeper.R;

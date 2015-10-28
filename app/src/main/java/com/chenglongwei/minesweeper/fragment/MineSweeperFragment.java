@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public class MineSweeperFragment extends Fragment implements View.OnClickListener {
     private Button bt_new;
-    private Button bt_valide;
+    private Button bt_validate;
     private Button bt_cheat;
     private LinearLayout ll_mine_field;
 
@@ -36,9 +36,17 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     // remember cell 0 positions, and do recursively revel.
     private Set<Point> reveled;
     private CellClickListener cellClickListener;
+
+    private GameBoard.MODEL model = GameBoard.MODEL.LEVEL_MEDIUM;
     private String TAG = "MineSweeper";
 
     public MineSweeperFragment() {
+    }
+
+    //game levels
+    public void setGameModel(GameBoard.MODEL model) {
+        this.model = model;
+        initGame();
     }
 
     @Override
@@ -57,17 +65,17 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     private void initView(View view) {
         ll_mine_field = (LinearLayout) view.findViewById(R.id.ll_mine_field);
         bt_new = (Button) view.findViewById(R.id.bt_new);
-        bt_valide = (Button) view.findViewById(R.id.bt_validate);
+        bt_validate = (Button) view.findViewById(R.id.bt_validate);
         bt_cheat = (Button) view.findViewById(R.id.bt_cheat);
 
         bt_new.setOnClickListener(this);
-        bt_valide.setOnClickListener(this);
+        bt_validate.setOnClickListener(this);
         bt_cheat.setOnClickListener(this);
     }
 
     private void initGame() {
-        game = new GameBoard();
-        cellButtons = new GameCell[GameBoard.DEFAULT_BOARD_HEIGHT][GameBoard.DEFAULT_BOARD_WIDTH];
+        game = new GameBoard(model);
+        cellButtons = new GameCell[game.getBoardHeight()][game.getBoardWidth()];
         cellClickListener = new CellClickListener();
         reveled = new HashSet<>();
         enableValidAndCheat(true);
@@ -94,13 +102,13 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     }
 
     private void enableValidAndCheat(boolean enable) {
-        bt_valide.setEnabled(enable);
+        bt_validate.setEnabled(enable);
         bt_cheat.setEnabled(enable);
         if (enable) {
-            bt_valide.setBackgroundResource(R.drawable.button_bg);
+            bt_validate.setBackgroundResource(R.drawable.button_bg);
             bt_cheat.setBackgroundResource(R.drawable.button_bg);
         } else {
-            bt_valide.setBackgroundResource(R.drawable.button_disable_bg);
+            bt_validate.setBackgroundResource(R.drawable.button_disable_bg);
             bt_cheat.setBackgroundResource(R.drawable.button_disable_bg);
         }
     }

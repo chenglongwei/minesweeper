@@ -6,6 +6,8 @@ import java.util.Random;
  * Created by chenglongwei on 10/27/15.
  */
 public class GameBoard {
+    public enum MODEL {LEVEL_EASY, LEVEL_MEDIUM, LEVEL_HARD}
+
     public static final int DEFAULT_BOARD_WIDTH = 8;
     public static final int DEFAULT_BOARD_HEIGHT = 8;
     public static final int DEFAULT_MINES_NUMBER = 10;
@@ -14,6 +16,18 @@ public class GameBoard {
     private int boardHeight = DEFAULT_BOARD_HEIGHT;
     private int boardWidth = DEFAULT_BOARD_WIDTH;
     private int minesNumber = DEFAULT_MINES_NUMBER;
+
+    public static final int EASY_HEIGHT = 6;
+    public static final int EASY_WIDTH = 6;
+    public static final int EASY_MINES_NUMBER = 8;
+
+    public static final int MEDIUM_HEIGHT = 8;
+    public static final int MEDIUM_WIDTH = 8;
+    public static final int MEDIUM_MINES_NUMBER = 10;
+
+    public static final int HARD_HEIGHT = 10;
+    public static final int HARD_WIDTH = 10;
+    public static final int HARD_MINES_NUMBER = 16;
 
     //Game board, indicates mine numbers around, MINE means mine.
     private int[][] board;
@@ -34,6 +48,27 @@ public class GameBoard {
             this.minesNumber = minesNumber;
         }
 
+        initGameBoard();
+    }
+
+    public GameBoard(MODEL model) {
+        switch (model) {
+            case LEVEL_EASY:
+                boardHeight = EASY_HEIGHT;
+                boardWidth = EASY_WIDTH;
+                minesNumber = EASY_MINES_NUMBER;
+                break;
+            case LEVEL_MEDIUM:
+                boardHeight = MEDIUM_HEIGHT;
+                boardWidth = MEDIUM_WIDTH;
+                minesNumber = MEDIUM_MINES_NUMBER;
+                break;
+            case LEVEL_HARD:
+                boardHeight = HARD_HEIGHT;
+                boardWidth = HARD_WIDTH;
+                minesNumber = HARD_MINES_NUMBER;
+                break;
+        }
         initGameBoard();
     }
 
