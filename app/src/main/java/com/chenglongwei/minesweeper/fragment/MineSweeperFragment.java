@@ -10,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 import com.chenglongwei.minesweeper.R;
 import com.chenglongwei.minesweeper.dialog.ConfirmDialog;
@@ -28,7 +32,7 @@ public class MineSweeperFragment extends Fragment {
     // if the cell is 0, we should revel neighbors around it,
     // remember cell 0 positions, and do recursively revel.
     private Set<Point> reveled;
-    private AbsoluteLayout rl_mine_field;
+    private LinearLayout ll_mine_field;
     private CellClickListener cellClickListener;
     private String TAG = "MineSweeper";
 
@@ -44,7 +48,7 @@ public class MineSweeperFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        rl_mine_field = (AbsoluteLayout) view.findViewById(R.id.rl_mine_field);
+        ll_mine_field = (LinearLayout) view.findViewById(R.id.ll_mine_field);
         initGame();
     }
 
@@ -65,16 +69,19 @@ public class MineSweeperFragment extends Fragment {
         int cellSize = Math.min(screenSize.x, screenSize.y) / (game.getBoardWidth() + 1);
         Log.d(TAG, "cellSize: " + cellSize);
 
-        rl_mine_field.removeAllViews();
+        ll_mine_field.removeAllViews();
 
         for (int i = 0; i < game.getBoardHeight(); i++) {
+            LinearLayout row = new LinearLayout(getActivity());
+            row.setHorizontalGravity(LinearLayout.HORIZONTAL);
             for (int j = 0; j < game.getBoardWidth(); j++) {
                 cellButtons[i][j] = new GameCell(getActivity());
                 cellButtons[i][j].setPositionAndValue(i, j, game.getMineNumberAt(i, j));
-                rl_mine_field.addView(cellButtons[i][j]);
-                cellButtons[i][j].setLayoutParams(new AbsoluteLayout.LayoutParams(cellSize, cellSize, i * cellSize, j * cellSize));
+                cellButtons[i][j].setLayoutParams(new RelativeLayout.LayoutParams(cellSize, cellSize));
                 cellButtons[i][j].setOnClickListener(cellClickListener);
+                row.addView(cellButtons[i][j]);
             }
+            ll_mine_field.addView(row);
         }
     }
 
@@ -113,8 +120,8 @@ public class MineSweeperFragment extends Fragment {
     }
 
     private void revelGameBoard() {
-        for(int i = 0; i < game.getBoardHeight(); i++) {
-            for(int j = 0; j < game.getBoardWidth(); j++) {
+        for (int i = 0; i < game.getBoardHeight(); i++) {
+            for (int j = 0; j < game.getBoardWidth(); j++) {
                 cellButtons[i][j].setReveled(true);
             }
         }
