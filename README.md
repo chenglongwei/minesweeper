@@ -18,3 +18,10 @@ The app supports these functions:
 * Saving/Loading game state.
 * Changing difficult level.
 * Changing the size of the board.
+
+
+### Build and Install
+To build the project, you can use **Android Studio** to open the project and then execute **gradle build** in the root directory.
+
+To install the app, execute **gradle installDebug** or **gradle installRelease**.
+Or else, there are two apks in the root directory. You can execute **adb install -r minesweeper-debug.apk** or **adb install -r minesweeper-release.apk**
