@@ -159,7 +159,6 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point screenSize = new Point();
         display.getSize(screenSize);
-        //add in some cell padding
         int cellSize = (screenSize.x - 2 * getResources().getDimensionPixelOffset(R.dimen.activity_horizontal_margin))
                 / (game.getBoardWidth());
 
@@ -189,9 +188,8 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
         Display display = getActivity().getWindowManager().getDefaultDisplay();
         Point screenSize = new Point();
         display.getSize(screenSize);
-        //add in some cell padding
-        int cellSize = Math.min(screenSize.x, screenSize.y) / (game.getBoardWidth() + 1);
-        Log.d(Config.TAG, "cellSize: " + cellSize);
+        int cellSize = (screenSize.x - 2 * getResources().getDimensionPixelOffset(R.dimen.activity_horizontal_margin))
+                / (game.getBoardWidth());
 
         ll_mine_field.removeAllViews();
 
