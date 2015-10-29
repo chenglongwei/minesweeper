@@ -25,4 +25,6 @@ To build the project, you can use **Android Studio** to open the project and the
 
 To install the app, execute **gradle installDebug** or **gradle installRelease**.
 
-Or else, there are two apks in the root directory. You can execute **adb install -r minesweeper-debug.apk** or **adb install -r minesweeper-release.apk**
+Or else, there are two apks in the root directory. 
+
+You can execute **adb install -r minesweeper-debug.apk** or **adb install -r minesweeper-release.apk**
