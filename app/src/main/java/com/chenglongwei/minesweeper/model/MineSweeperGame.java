@@ -5,7 +5,7 @@ import java.util.Random;
 /**
  * Created by chenglongwei on 10/27/15.
  */
-public class GameBoard {
+public class MineSweeperGame {
     public enum MODEL {LEVEL_EASY, LEVEL_MEDIUM, LEVEL_HARD}
 
     public static final int DEFAULT_BOARD_WIDTH = 8;
@@ -35,11 +35,11 @@ public class GameBoard {
     public static int[][] directions = new int[][]{
             {-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
 
-    public GameBoard() {
+    public MineSweeperGame() {
         initGameBoard();
     }
 
-    public GameBoard(int boardHeight, int boardWidth, int minesNumber) {
+    public MineSweeperGame(int boardHeight, int boardWidth, int minesNumber) {
         //Do some check of the parameter.
         if (boardHeight > 0 && boardWidth > 0 && minesNumber > 0 &&
                 minesNumber < boardHeight * boardWidth) {
@@ -51,7 +51,7 @@ public class GameBoard {
         initGameBoard();
     }
 
-    public GameBoard(MODEL model) {
+    public MineSweeperGame(MODEL model) {
         switch (model) {
             case LEVEL_EASY:
                 boardHeight = EASY_HEIGHT;

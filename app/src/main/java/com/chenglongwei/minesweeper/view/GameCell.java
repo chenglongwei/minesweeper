@@ -1,11 +1,10 @@
 package com.chenglongwei.minesweeper.view;
 
 import android.content.Context;
-import android.view.Gravity;
 import android.widget.Button;
 
 import com.chenglongwei.minesweeper.R;
-import com.chenglongwei.minesweeper.model.GameBoard;
+import com.chenglongwei.minesweeper.model.MineSweeperGame;
 
 /**
  * Created by chenglongwei on 10/27/15.
@@ -31,7 +30,7 @@ public class GameCell extends Button {
     public void setReveled(boolean reveled) {
         this.reveled = reveled;
         if (reveled) {
-            if (mineNumber == GameBoard.MINE) {
+            if (mineNumber == MineSweeperGame.MINE) {
                 setText(mineSymbol);
                 setBackgroundResource(R.drawable.mine_hitten);
             } else {
@@ -44,7 +43,7 @@ public class GameCell extends Button {
     }
 
     public void cheatAndRevealMine() {
-        if (mineNumber == GameBoard.MINE) {
+        if (mineNumber == MineSweeperGame.MINE) {
             setText(mineSymbol);
         }
     }
@@ -53,11 +52,27 @@ public class GameCell extends Button {
         return row;
     }
 
+    public void setRow(int row) {
+        this.row = row;
+    }
+
     public int getColumn() {
         return column;
     }
 
-    public boolean getReveled() {
+    public void setColumn(int column) {
+        this.column = column;
+    }
+
+    public int getMineNumber() {
+        return mineNumber;
+    }
+
+    public void setMineNumber(int mineNumber) {
+        this.mineNumber = mineNumber;
+    }
+
+    public boolean isReveled() {
         return reveled;
     }
 }

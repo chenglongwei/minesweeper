@@ -13,9 +13,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.chenglongwei.minesweeper.Config;
 import com.chenglongwei.minesweeper.R;
 import com.chenglongwei.minesweeper.dialog.ConfirmDialog;
-import com.chenglongwei.minesweeper.model.GameBoard;
+import com.chenglongwei.minesweeper.model.MineSweeperGame;
+import com.chenglongwei.minesweeper.repository.SharePreferenceUtil;
 import com.chenglongwei.minesweeper.view.GameCell;
 
 import java.util.HashSet;
@@ -30,23 +32,46 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     private Button bt_cheat;
     private LinearLayout ll_mine_field;
 
-    private GameBoard game;
-    private GameCell[][] cellButtons;
+    private MineSweeperGame game;
+    private GameCell[][] gameCells;
     // if the cell is 0, we should revel neighbors around it,
     // remember cell 0 positions, and do recursively revel.
     private Set<Point> reveled;
     private CellClickListener cellClickListener;
 
-    private GameBoard.MODEL model = GameBoard.MODEL.LEVEL_MEDIUM;
-    private String TAG = "MineSweeper";
+    private MineSweeperGame.MODEL model = MineSweeperGame.MODEL.LEVEL_MEDIUM;
 
     public MineSweeperFragment() {
     }
 
     //game levels
-    public void setGameModel(GameBoard.MODEL model) {
+    public void setGameModel(MineSweeperGame.MODEL model) {
         this.model = model;
         initGame();
+    }
+
+    //save game state
+    public void saveGame() {
+        SharePreferenceUtil.saveGameModel(getActivity(), game);
+        boolean[][] state = new boolean[game.getBoardHeight()][game.getBoardWidth()];
+        for (int i = 0; i < game.getBoardHeight(); i++) {
+            for (int j = 0; j < game.getBoardWidth(); j++) {
+                if (gameCells[i][j].isReveled()) {
+                    state[i][j] = true;
+                }
+            }
+        }
+        SharePreferenceUtil.saveGameState(getActivity(), state);
+        Log.d(Config.TAG, "button enabled ?" + bt_validate.isEnabled());
+        SharePreferenceUtil.saveValidateCheatButtonState(getActivity(), bt_validate.isEnabled());
+    }
+
+    //load game from last saved state
+    public void loadGame() {
+        game = SharePreferenceUtil.getGameModel(getActivity());
+        boolean[][] state = SharePreferenceUtil.getGameState(getActivity());
+        boolean enable = SharePreferenceUtil.getValidateCheatButtonState(getActivity());
+        initGame(game, state, enable);
     }
 
     @Override
@@ -74,12 +99,22 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     }
 
     private void initGame() {
-        game = new GameBoard(model);
-        cellButtons = new GameCell[game.getBoardHeight()][game.getBoardWidth()];
+        game = new MineSweeperGame(model);
+        gameCells = new GameCell[game.getBoardHeight()][game.getBoardWidth()];
         cellClickListener = new CellClickListener();
         reveled = new HashSet<>();
         enableValidAndCheat(true);
         renderMineField();
+    }
+
+    //use loaded info to do initialization
+    private void initGame(MineSweeperGame game, boolean[][] state, boolean enable) {
+        this.game = game;
+        this.gameCells = new GameCell[game.getBoardHeight()][game.getBoardWidth()];
+        cellClickListener = new CellClickListener();
+        reveled = new HashSet<>();
+        enableValidAndCheat(enable);
+        renderMineField(state);
     }
 
     @Override
@@ -120,7 +155,7 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
         display.getSize(screenSize);
         //add in some cell padding
         int cellSize = Math.min(screenSize.x, screenSize.y) / (game.getBoardWidth() + 1);
-        Log.d(TAG, "cellSize: " + cellSize);
+        Log.d(Config.TAG, "cellSize: " + cellSize);
 
         ll_mine_field.removeAllViews();
 
@@ -128,11 +163,39 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
             LinearLayout row = new LinearLayout(getActivity());
             row.setHorizontalGravity(LinearLayout.HORIZONTAL);
             for (int j = 0; j < game.getBoardWidth(); j++) {
-                cellButtons[i][j] = new GameCell(getActivity());
-                cellButtons[i][j].setPositionAndValue(i, j, game.getMineNumberAt(i, j));
-                cellButtons[i][j].setLayoutParams(new RelativeLayout.LayoutParams(cellSize, cellSize));
-                cellButtons[i][j].setOnClickListener(cellClickListener);
-                row.addView(cellButtons[i][j]);
+                gameCells[i][j] = new GameCell(getActivity());
+                gameCells[i][j].setPositionAndValue(i, j, game.getMineNumberAt(i, j));
+                gameCells[i][j].setLayoutParams(new RelativeLayout.LayoutParams(cellSize, cellSize));
+                gameCells[i][j].setOnClickListener(cellClickListener);
+                row.addView(gameCells[i][j]);
+            }
+            ll_mine_field.addView(row);
+        }
+    }
+
+    private void renderMineField(boolean[][] state) {
+        //get the screen size to compute cell height
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        Point screenSize = new Point();
+        display.getSize(screenSize);
+        //add in some cell padding
+        int cellSize = Math.min(screenSize.x, screenSize.y) / (game.getBoardWidth() + 1);
+        Log.d(Config.TAG, "cellSize: " + cellSize);
+
+        ll_mine_field.removeAllViews();
+
+        for (int i = 0; i < game.getBoardHeight(); i++) {
+            LinearLayout row = new LinearLayout(getActivity());
+            row.setHorizontalGravity(LinearLayout.HORIZONTAL);
+            for (int j = 0; j < game.getBoardWidth(); j++) {
+                gameCells[i][j] = new GameCell(getActivity());
+                gameCells[i][j].setPositionAndValue(i, j, game.getMineNumberAt(i, j));
+                gameCells[i][j].setLayoutParams(new RelativeLayout.LayoutParams(cellSize, cellSize));
+                gameCells[i][j].setOnClickListener(cellClickListener);
+                if (state[i][j]) {
+                    gameCells[i][j].setReveled(true);
+                }
+                row.addView(gameCells[i][j]);
             }
             ll_mine_field.addView(row);
         }
@@ -141,10 +204,10 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     class CellClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Log.d(TAG, "click: " + v);
+            Log.d(Config.TAG, "click: " + v);
             GameCell cell = (GameCell) v;
             //already reveled, do nothing
-            if (cell.getReveled()) {
+            if (cell.isReveled()) {
                 return;
             }
 
@@ -154,7 +217,7 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
             if (game.getMineNumberAt(row, column) == 0) {
                 reveled.add(new Point(row, column));
                 revelNeighbors(row, column);
-            } else if (game.getMineNumberAt(row, column) == GameBoard.MINE) {
+            } else if (game.getMineNumberAt(row, column) == MineSweeperGame.MINE) {
                 showGameOverDialog();
             }
         }
@@ -198,18 +261,18 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     private void revelGameBoard() {
         for (int i = 0; i < game.getBoardHeight(); i++) {
             for (int j = 0; j < game.getBoardWidth(); j++) {
-                cellButtons[i][j].setReveled(true);
+                gameCells[i][j].setReveled(true);
             }
         }
     }
 
     private void revelNeighbors(int row, int column) {
-        for (int i = 0; i < GameBoard.directions.length; i++) {
-            int r = row + GameBoard.directions[i][0];
-            int c = column + GameBoard.directions[i][1];
+        for (int i = 0; i < MineSweeperGame.directions.length; i++) {
+            int r = row + MineSweeperGame.directions[i][0];
+            int c = column + MineSweeperGame.directions[i][1];
             if (r >= 0 && r < game.getBoardHeight() && c >= 0 && c < game.getBoardWidth()) {
 
-                cellButtons[r][c].setReveled(true);
+                gameCells[r][c].setReveled(true);
                 //if number was 0, behaves as if the user has clicked on every cell around it.
                 if (game.getMineNumberAt(r, c) == 0 && reveled.add(new Point(r, c))) {
                     revelNeighbors(r, c);
@@ -222,7 +285,7 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     private void cheatGame() {
         for (int i = 0; i < game.getBoardHeight(); i++) {
             for (int j = 0; j < game.getBoardWidth(); j++) {
-                cellButtons[i][j].cheatAndRevealMine();
+                gameCells[i][j].cheatAndRevealMine();
             }
         }
     }
@@ -230,7 +293,7 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     private boolean checkGame() {
         for (int i = 0; i < game.getBoardHeight(); i++) {
             for (int j = 0; j < game.getBoardWidth(); j++) {
-                if (!cellButtons[i][j].getReveled() && game.getMineNumberAt(i, j) != GameBoard.MINE) {
+                if (!gameCells[i][j].isReveled() && game.getMineNumberAt(i, j) != MineSweeperGame.MINE) {
                     return false;
                 }
             }

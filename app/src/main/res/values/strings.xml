@@ -13,7 +13,9 @@
     <string name="game_success_title">Congratulations!</string>
     <string name="game_success_message">You find all the Mines.</string>
     <string name="game_success_button">OK</string>
-    <string name="easy">easy</string>
-    <string name="medium">medium</string>
-    <string name="hard">hard</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
+    <string name="save">Save</string>
+    <string name="load">Load</string>
 </resources>
