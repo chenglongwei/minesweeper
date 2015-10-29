@@ -47,7 +47,12 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     //game levels
     public void setGameModel(MineSweeperGame.MODEL model) {
         this.model = model;
-        initGame();
+        initGame(new MineSweeperGame(model));
+    }
+
+    //customized game levels
+    public void setGameModel(int rowNumber, int columnNumber, int mineNumber) {
+        initGame(new MineSweeperGame(rowNumber, columnNumber, mineNumber));
     }
 
     //save game state
@@ -84,7 +89,7 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initView(view);
-        initGame();
+        initGame(new MineSweeperGame());
     }
 
     private void initView(View view) {
@@ -98,8 +103,8 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
         bt_cheat.setOnClickListener(this);
     }
 
-    private void initGame() {
-        game = new MineSweeperGame(model);
+    private void initGame(MineSweeperGame game) {
+        this.game = game;
         gameCells = new GameCell[game.getBoardHeight()][game.getBoardWidth()];
         cellClickListener = new CellClickListener();
         reveled = new HashSet<>();
@@ -121,7 +126,7 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_new:
-                initGame();
+                initGame(new MineSweeperGame(model));
                 break;
             case R.id.bt_validate:
                 if (checkGame()) {

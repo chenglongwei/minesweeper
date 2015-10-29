@@ -7,15 +7,23 @@
         android:orderInCategory="100"
         android:title="@string/easy"
         app:showAsAction="never" />
+
     <item
         android:id="@+id/action_medium"
         android:orderInCategory="100"
         android:title="@string/medium"
         app:showAsAction="never" />
+
     <item
         android:id="@+id/action_hard"
         android:orderInCategory="100"
         android:title="@string/hard"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_custom"
+        android:orderInCategory="100"
+        android:title="@string/custom"
         app:showAsAction="never" />
 
     <item

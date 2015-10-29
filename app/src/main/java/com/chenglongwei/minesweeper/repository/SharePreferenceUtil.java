@@ -2,7 +2,6 @@ package com.chenglongwei.minesweeper.repository;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
 import android.util.Log;
 

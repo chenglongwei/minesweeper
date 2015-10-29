@@ -5,8 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.chenglongwei.minesweeper.R;
+import com.chenglongwei.minesweeper.dialog.CustomizeDialog;
 import com.chenglongwei.minesweeper.fragment.MineSweeperFragment;
 import com.chenglongwei.minesweeper.model.MineSweeperGame;
 
@@ -28,15 +30,15 @@ public class MineSweeperActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_minesweeper, menu);
         MenuItem itemEasy = menu.findItem(R.id.action_easy);
         itemEasy.setTitle(getResources().getString(R.string.easy) + " (" + MineSweeperGame.EASY_HEIGHT + "*"
-                + MineSweeperGame.EASY_WIDTH + "  " + MineSweeperGame.EASY_MINES_NUMBER + ")");
+                + MineSweeperGame.EASY_WIDTH + "  " + MineSweeperGame.EASY_MINES_NUMBER + " mines)");
 
         MenuItem itemMedium = menu.findItem(R.id.action_medium);
         itemMedium.setTitle(getResources().getString(R.string.medium) + " (" + MineSweeperGame.MEDIUM_HEIGHT + "*"
-                + MineSweeperGame.MEDIUM_WIDTH + "  " + MineSweeperGame.MEDIUM_MINES_NUMBER + ")");
+                + MineSweeperGame.MEDIUM_WIDTH + "  " + MineSweeperGame.MEDIUM_MINES_NUMBER + " mines)");
 
         MenuItem itemHard = menu.findItem(R.id.action_hard);
         itemHard.setTitle(getResources().getString(R.string.hard) + " (" + MineSweeperGame.HARD_HEIGHT + "*"
-                + MineSweeperGame.HARD_WIDTH + "  " + MineSweeperGame.HARD_MINES_NUMBER + ")");
+                + MineSweeperGame.HARD_WIDTH + "  " + MineSweeperGame.HARD_MINES_NUMBER + " mines)");
         return true;
     }
 
@@ -61,8 +63,36 @@ public class MineSweeperActivity extends AppCompatActivity {
             case R.id.action_load:
                 fragment.loadGame();
                 return true;
+            case R.id.action_custom:
+                showCustomizeDialog();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showCustomizeDialog() {
+        final CustomizeDialog customizeDialog = new CustomizeDialog(this);
+        customizeDialog.setOnCancelClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                customizeDialog.dismiss();
+            }
+        });
+        customizeDialog.setOnConfirmClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int row = customizeDialog.getRowNumber();
+                int column = customizeDialog.getColumnNumber();
+                int mine = customizeDialog.getMineNumber();
+                //do some check
+                if (mine >= row * mine) {
+                    mine = row * mine - 1;
+                }
+                fragment.setGameModel(row, column, mine);
+                customizeDialog.dismiss();
+            }
+        });
+        customizeDialog.show();
     }
 }

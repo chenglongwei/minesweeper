@@ -18,4 +18,10 @@
     <string name="hard">Hard</string>
     <string name="save">Save</string>
     <string name="load">Load</string>
+    <string name="custom">Customize</string>
+    <string name="row_title">Row Number</string>
+    <string name="column_title">Column Number</string>
+    <string name="mine_title">Mine Number</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 </resources>

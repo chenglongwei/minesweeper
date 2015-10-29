@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <LinearLayout
+        android:id="@+id/ll_titles"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="3">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/board_border"
+            android:text="@string/row_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/board_border"
+            android:text="@string/column_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="@dimen/board_border"
+            android:text="@string/mine_title" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_numbers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_titles"
+        android:weightSum="3">
+
+        <NumberPicker
+            android:id="@+id/np_row_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1" />
+
+        <NumberPicker
+            android:id="@+id/np_column_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1" />
+
+        <NumberPicker
+            android:id="@+id/np_mine_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_numbers"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/bt_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginRight="@dimen/activity_vertical_margin"
+            android:layout_weight="1"
+            android:background="@drawable/button_bg"
+            android:text="@string/cancel"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/bt_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_weight="1"
+            android:background="@drawable/button_bg"
+            android:text="@string/confirm"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+
+</RelativeLayout>
