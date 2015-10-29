@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -159,13 +160,18 @@ public class MineSweeperFragment extends Fragment implements View.OnClickListene
         Point screenSize = new Point();
         display.getSize(screenSize);
         //add in some cell padding
-        int cellSize = Math.min(screenSize.x, screenSize.y) / (game.getBoardWidth() + 1);
+        int cellSize = (screenSize.x - 2 * getResources().getDimensionPixelOffset(R.dimen.activity_horizontal_margin))
+                / (game.getBoardWidth());
+
         Log.d(Config.TAG, "cellSize: " + cellSize);
 
         ll_mine_field.removeAllViews();
 
         for (int i = 0; i < game.getBoardHeight(); i++) {
             LinearLayout row = new LinearLayout(getActivity());
+            row.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT));
+            row.setGravity(Gravity.CENTER);
             row.setHorizontalGravity(LinearLayout.HORIZONTAL);
             for (int j = 0; j < game.getBoardWidth(); j++) {
                 gameCells[i][j] = new GameCell(getActivity());

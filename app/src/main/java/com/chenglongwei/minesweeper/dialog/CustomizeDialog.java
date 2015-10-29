@@ -37,6 +37,8 @@ public class CustomizeDialog extends Dialog {
 
         bt_cancel = (Button) findViewById(R.id.bt_cancel);
         bt_confirm = (Button) findViewById(R.id.bt_confirm);
+
+        setTitle(context.getString(R.string.customize_title));
     }
 
     public void setOnCancelClickListener(View.OnClickListener listener) {
