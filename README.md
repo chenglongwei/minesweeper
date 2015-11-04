@@ -13,21 +13,26 @@ The board is an 8x8 grid and by default 10 hidden mines are randomly placed into
 
 The app supports these functions:
 * New Game: start a new, randomly generated game.
+
 <img src="https://github.com/chenglongwei/minesweeper/blob/master/screenshort/new_game.png" width="120">
 
 <img src="https://github.com/chenglongwei/minesweeper/blob/master/screenshort/hitting_a_mine.png width="120">
 
 * Validate: check that a user has correctly marked all the tiles and end the game in either victory or failure.
+
 <img src="https://github.com/chenglongwei/minesweeper/blob/master/screenshort/validate.png" width="120">
 
 * Cheat: in any manner you deem appropriate, reveal the locations of the mines without ending the game.
+
 <img src="https://github.com/chenglongwei/minesweeper/blob/master/screenshort/cheat_model.png width="120">
 
 * Saving/Loading game state.
+
 <img src="https://github.com/chenglongwei/minesweeper/blob/master/screenshort/level_choice_save_load.png" width="120">
 
 * Changing difficult level.
 * Changing the size of the board.
+
 <img src="https://github.com/chenglongwei/minesweeper/blob/master/screenshort/custom_level.png" width="120">
 
 ### Build and Install
