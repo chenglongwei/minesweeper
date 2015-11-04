@@ -13,12 +13,21 @@ The board is an 8x8 grid and by default 10 hidden mines are randomly placed into
 
 The app supports these functions:
 * New Game: start a new, randomly generated game.
+![alt Game Board](https://github.com/chenglongwei/minesweeper/blob/master/screenshort/new_game.png "Game Board")
+![alt Hit A Mine](https://github.com/chenglongwei/minesweeper/blob/master/screenshort/hitting_a_mine.png "Hit a Mine")
+
 * Validate: check that a user has correctly marked all the tiles and end the game in either victory or failure.
+![alt Validate Game](https://github.com/chenglongwei/minesweeper/blob/master/screenshort/validate.png "Validate Game")
+
 * Cheat: in any manner you deem appropriate, reveal the locations of the mines without ending the game.
+![alt Cheat Model](https://github.com/chenglongwei/minesweeper/blob/master/screenshort/cheat_model.png "Cheat Model")
+
 * Saving/Loading game state.
+![alt Cheat Model](https://github.com/chenglongwei/minesweeper/blob/master/screenshort/level_choice_save_load.png "Cheat Model")
+
 * Changing difficult level.
 * Changing the size of the board.
-
+![alt Customize Game Level](https://github.com/chenglongwei/minesweeper/blob/master/screenshort/custom_level.png "Customize Game Level")
 
 ### Build and Install
 To build the project, you can use **Android Studio** to open the project and then execute **gradle build** in the root directory.
